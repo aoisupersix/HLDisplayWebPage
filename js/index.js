@@ -1,15 +1,35 @@
 var updateTime = 2000 //更新間隔[ms]
 
 $(function() {
+  getStatus();
   for(var i = 1; i <= 14; i++){
     addCard("Card-" + i, "外出", "bg-secondary")
   }
 })
 
 /*
- * 初期化処理を行います
+ * ステータス等の情報を取得を要求します
  */
-function init() {
+function getStatus() {
+  $.ajax({
+    url:'https://script.google.com/macros/s/AKfycbwtEGgAOQ6LA3rcvsLcQFrrg8uVE1v5lkg8eNn40YjwAASTwmc/exec?returns=jsonp',
+    dataType: 'jsonp',
+    jsonpCallback: 'updateLayout',
+  });
+}
+
+function updateLayout(json){
+  console.log(json);
+  //ステータスの削除
+  $("#memberStatus").empty();
+
+  //ステータスの生成
+  var member = json["member"];
+  var status = json["status"];
+  for(var i = 0; i < member.length; i++){
+    var stateId = parseInt(member[i].status);
+    addCard(member[i].name, status[stateId].name, status[stateId].color);
+  }
 }
 
 /*
