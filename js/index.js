@@ -2,9 +2,6 @@ var updateTime = 2000 //更新間隔[ms]
 
 $(function() {
   getStatus();
-  for(var i = 1; i <= 14; i++){
-    addCard("Card-" + i, "外出", "bg-secondary")
-  }
 })
 
 /*
@@ -16,8 +13,13 @@ function getStatus() {
     dataType: 'jsonp',
     jsonpCallback: 'updateLayout',
   });
+  setTimeout(function() { getStatus()}, updateTime);
 }
 
+/*
+ * ステータス情報を適用させます
+ * Jsonpのコールバック関数
+ */
 function updateLayout(json){
   console.log(json);
   //ステータスの削除
