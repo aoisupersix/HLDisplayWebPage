@@ -38,7 +38,6 @@ function getStatus() {
     dataType: 'jsonp',
     jsonpCallback: 'updateLayout',
   });
-  setTimeout(function(){getStatus()}, UPDATE_TIME);
 }
 
 /*
@@ -71,6 +70,7 @@ function updateLayout(json){
     addCard(member[i].id, member[i].name, status[stateId].name, status[stateId].color);
   }
   initStatusDetailButton(status);
+  setTimeout(function(){getStatus()}, UPDATE_TIME);
 }
 
 /*
