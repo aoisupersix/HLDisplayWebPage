@@ -11,7 +11,12 @@ $(function() {
   });
 })
 
+/*
+ * ステータス詳細モーダルを表示します
+ */
 function showStatusDetail(obj) {
+  $('#statusDetail-Name').text($(obj).attr('data-name'));
+  $('#statusDetail-Status').text($(obj).attr('data-statusText'));
   $('#statusDetailModal').modal();
 }
 
@@ -43,6 +48,7 @@ function updateLayout(json){
     var stateId = parseInt(member[i].status);
     addCard(member[i].name, status[stateId].name, status[stateId].color);
   }
+  initStatusDetailButton(status);
 }
 
 /*
@@ -50,7 +56,7 @@ function updateLayout(json){
  */
 function addCard(name, statusText, color){
   $('#memberStatus').append(
-    $('<div class="card" style="margin: 5pt;width: 11rem;height: 9rem;"></div>').addClass(color)
+    $('<div class="card" style="margin: 5pt;width: 11rem;height: 9rem;"></div>').addClass('bg-' + color)
     .append($('<a href="#" class="btn btn-fix"></a>')
       .attr({
         'onClick': 'showStatusDetail(this)',
@@ -64,4 +70,17 @@ function addCard(name, statusText, color){
       )
     )
   );
+}
+
+/*
+ * ステータス更新用のボタンを作成します
+ */
+function initStatusDetailButton(status){
+  $('#statusButtons').empty();
+  for(var i = 0; i < status.length; i++){
+    $('#statusButtons').append(
+      $('<Button class="btn btn-lg" style="width: 7em;height: 5em; margin: 3pt;"></Button>').addClass('btn-' + status[i].color)
+      .attr('id', i).text(status[i].name)
+    );
+  }
 }

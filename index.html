@@ -42,11 +42,16 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">ステータス</h5>
+          <h5 class="modal-title">ステータス：<span id="statusDetail-Name" /></h5>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
-          Modal...
+          <h4 id="statusDetail-Status" class="display-3">Status</h4>
+          <hr />
+          <h5>ステータス更新：</h5>
+          <div id="statusButtons">
+            <button type="button" class="btn bg-primary" style="width: 7em;height: 5em;">Primary</button>
+          </div>
         </div>
       </div>
     </div>
