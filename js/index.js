@@ -1,15 +1,12 @@
-var updateTime = 2000 //更新間隔[ms]
+/**
+ * ステータス情報の更新間隔[ms]
+ */
+var UPDATE_TIME = 2000
 
-$(function() {
-  getStatus();
-
-  /*
-   * イベントハンドラ登録
-   * カードのクリックでステータス詳細モーダルを表示
-   */
-  $('.card').on('click', function(event) {
-  });
-})
+/**
+ * 初期化処理を行います
+ */
+$(function() { getStatus(); })
 
 /*
  * ステータス詳細モーダルを表示します
@@ -17,7 +14,18 @@ $(function() {
 function showStatusDetail(obj) {
   $('#statusDetail-Name').text($(obj).attr('data-name'));
   $('#statusDetail-Status').text($(obj).attr('data-statusText'));
+  $('#statusDetailModal').attr('data-id', $(obj).attr('data-id'));
   $('#statusDetailModal').modal();
+}
+
+/**
+ * ステータス更新ボタン押下時にステータスを更新します
+ * @param {object} obj - クリックされたステータス更新ボタン
+ */
+function statusChange(obj) {
+  var userId = $('#statusDetailModal').attr('data-id');
+  var stateId = $(obj).attr('data-id');
+  pushStatus(userId, stateId);
 }
 
 /*
@@ -29,7 +37,24 @@ function getStatus() {
     dataType: 'jsonp',
     jsonpCallback: 'updateLayout',
   });
-  //setTimeout(function() { getStatus()}, updateTime);
+  setTimeout(function() { getStatus()}, updateTime);
+}
+
+/*
+ * ステータス情報を更新します
+ */
+function pushStatus(userId, statusId) {
+  var dataDict = {"id": userId, "status": statusId};
+  $.ajax({
+    url: 'https://script.google.com/macros/s/AKfycbwtEGgAOQ6LA3rcvsLcQFrrg8uVE1v5lkg8eNn40YjwAASTwmc/exec?returns=jsonp&update=true',
+    dataType: 'jsonp',
+    data: dataDict,
+    jsonpCallback: 'updateLayout'
+  }).done(function(data) {
+    $('#statusDetailModal').modal('hide');
+    alert('ステータス更新に成功しました。')
+    console.log(data);
+  });
 }
 
 /*
@@ -46,7 +71,7 @@ function updateLayout(json){
   var status = json["status"];
   for(var i = 0; i < member.length; i++){
     var stateId = parseInt(member[i].status);
-    addCard(member[i].name, status[stateId].name, status[stateId].color);
+    addCard(member[i].id, member[i].name, status[stateId].name, status[stateId].color);
   }
   initStatusDetailButton(status);
 }
@@ -54,12 +79,13 @@ function updateLayout(json){
 /*
  * Htmlにカードを追加します
  */
-function addCard(name, statusText, color){
+function addCard(id, name, statusText, color){
   $('#memberStatus').append(
     $('<div class="card" style="margin: 5pt;width: 11rem;height: 9rem;"></div>').addClass('bg-' + color)
     .append($('<a href="#" class="btn btn-fix"></a>')
       .attr({
         'onClick': 'showStatusDetail(this)',
+        'data-id': id,
         'data-name': name,
         'data-statusText': statusText,
         'data-color': color
@@ -80,7 +106,11 @@ function initStatusDetailButton(status){
   for(var i = 0; i < status.length; i++){
     $('#statusButtons').append(
       $('<Button class="btn btn-lg" style="width: 7em;height: 5em; margin: 3pt;"></Button>').addClass('btn-' + status[i].color)
-      .attr('id', i).text(status[i].name)
+      .text(status[i].name)
+      .attr({
+        'data-id': i,
+        'onClick': 'statusChange(this)'
+      })
     );
   }
 }
