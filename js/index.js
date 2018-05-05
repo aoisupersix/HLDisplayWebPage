@@ -26,6 +26,7 @@ function statusChange(obj) {
   var userId = $('#statusDetailModal').attr('data-id');
   var stateId = $(obj).attr('data-id');
   pushStatus(userId, stateId);
+  $('#statusDetailModal').modal('hide');
 }
 
 /*
@@ -37,7 +38,7 @@ function getStatus() {
     dataType: 'jsonp',
     jsonpCallback: 'updateLayout',
   });
-  setTimeout(function() { getStatus()}, updateTime);
+  setTimeout(function(){getStatus()}, UPDATE_TIME);
 }
 
 /*
@@ -49,11 +50,7 @@ function pushStatus(userId, statusId) {
     url: 'https://script.google.com/macros/s/AKfycbwtEGgAOQ6LA3rcvsLcQFrrg8uVE1v5lkg8eNn40YjwAASTwmc/exec?returns=jsonp&update=true',
     dataType: 'jsonp',
     data: dataDict,
-    jsonpCallback: 'updateLayout'
-  }).done(function(data) {
-    $('#statusDetailModal').modal('hide');
-    alert('ステータス更新に成功しました。')
-    console.log(data);
+    jsonpCallback: 'jsonP'
   });
 }
 
