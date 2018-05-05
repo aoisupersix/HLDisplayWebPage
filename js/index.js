@@ -8,8 +8,9 @@ var UPDATE_TIME = 2000
  */
 $(function() { getStatus(); })
 
-/*
- * ステータス詳細モーダルを表示します
+/**
+ * カード押下時にステータス詳細モーダルを表示します
+ * @param {object} obj - クリックされたカード
  */
 function showStatusDetail(obj) {
   $('#statusDetail-Name').text($(obj).attr('data-name'));
@@ -29,7 +30,7 @@ function statusChange(obj) {
   $('#statusDetailModal').modal('hide');
 }
 
-/*
+/**
  * ステータス等の情報を取得を要求します
  */
 function getStatus() {
@@ -40,8 +41,10 @@ function getStatus() {
   });
 }
 
-/*
+/**
  * ステータス情報を更新します
+ * @param {int} userId - ユーザ情報のID
+ * @param {int} statusId - ステータス情報のID
  */
 function pushStatus(userId, statusId) {
   var dataDict = {"id": userId, "status": statusId};
@@ -53,9 +56,10 @@ function pushStatus(userId, statusId) {
   });
 }
 
-/*
+/**
  * ステータス情報を適用させます
- * Jsonpのコールバック関数
+ * Jsonpのコールバック関数です
+ * @param {JSON} json - サーバからのレスポンスデータ
  */
 function updateLayout(json){
   console.log(json);
@@ -73,8 +77,12 @@ function updateLayout(json){
   setTimeout(function(){getStatus()}, UPDATE_TIME);
 }
 
-/*
+/**
  * Htmlにカードを追加します
+ * @param {int} id - ユーザidea
+ * @param {string} name - ユーザ名
+ * @param {string} statusText - ステータス状態を表す文字列
+ * @param {string} color - ステータス状態に対応するBootStrapカラー
  */
 function addCard(id, name, statusText, color){
   $('#memberStatus').append(
@@ -95,8 +103,9 @@ function addCard(id, name, statusText, color){
   );
 }
 
-/*
+/**
  * ステータス更新用のボタンを作成します
+ * @param {JSON} status - サーバからのレスポンスの内、ステータス情報の部分を抜き出したJSON
  */
 function initStatusDetailButton(status){
   $('#statusButtons').empty();
