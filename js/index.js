@@ -52,7 +52,7 @@ function pushStatus(userId, statusId) {
     url: 'https://script.google.com/macros/s/AKfycbwtEGgAOQ6LA3rcvsLcQFrrg8uVE1v5lkg8eNn40YjwAASTwmc/exec?returns=jsonp&update=true',
     dataType: 'jsonp',
     data: dataDict,
-    jsonpCallback: 'jsonP'
+    jsonpCallback: 'updateLayout'
   });
 }
 
@@ -74,7 +74,7 @@ function updateLayout(json){
     addCard(member[i].id, member[i].name, status[stateId].name, status[stateId].color);
   }
   initStatusDetailButton(status);
-  setTimeout(function(){getStatus()}, UPDATE_TIME);
+  //setTimeout(function(){getStatus()}, UPDATE_TIME);
 }
 
 /**
