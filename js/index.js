@@ -4,6 +4,11 @@
 var UPDATE_TIME = 2000
 
 /**
+ * 連続通信の防止用
+ */
+var jqxhr = null;
+
+/**
  * 初期化処理を行います
  */
 $(function() { getStatus(); })
@@ -48,7 +53,11 @@ function getStatus() {
  */
 function pushStatus(userId, statusId) {
   var dataDict = {"id": userId, "status": statusId};
-  $.ajax({
+  if(jqxhr) {
+    //通信を中断
+    jqxhr.abort();
+  }
+  jqxhr = $.ajax({
     url: 'https://script.google.com/macros/s/AKfycbwtEGgAOQ6LA3rcvsLcQFrrg8uVE1v5lkg8eNn40YjwAASTwmc/exec?returns=jsonp&update=true',
     dataType: 'jsonp',
     data: dataDict,
