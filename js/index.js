@@ -33,6 +33,7 @@ function statusChange(obj) {
   var stateId = $(obj).attr('data-id');
   pushStatus(userId, stateId);
   $('#statusDetailModal').modal('hide');
+  android.updateState(userId, stateId);
 }
 
 /**
