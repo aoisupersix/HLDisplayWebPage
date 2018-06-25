@@ -9,9 +9,58 @@ var UPDATE_TIME = 2000
 var jqxhr = null;
 
 /**
- * 初期化処理を行います
+ * ステータス情報のJSON
  */
-$(function() { getStatus(); })
+var statusJson;
+
+/**
+ * 初期化処理を行います。
+ * AndroidApp側から呼び出される関数です。
+ * @param {string} jsonString ステータス情報のJSON
+ */
+function init(jsonString) {
+  //ステータスの削除
+  $("#memberStatus").empty();
+
+  //ステータスの生成
+  var json = JSON.parse(jsonString);
+  var members = json["members"];
+  var status = json["states"];
+  statusJson = status;
+  for(var i = 0; i < members.length; i++){
+    var stateId = parseInt(members[i]["status"]);
+    addCard(i, members[i]["name"], status[stateId]["name"], status[stateId]["color"]);
+  }
+  initStatusDetailButton(status);
+}
+/**
+ * メンバー情報の更新を行います。
+ * AndroidApp側から呼び出される関数です。
+ * @param {string} jsonString ステータス情報のJSON
+ */
+function updateMemberStatus(jsonString) {
+  var json = JSON.parse(jsonString);
+  $('#memberStatus').children().each(function(index, element) {
+    console.log("index-" + index);
+    var card = $(element).find('.btn');
+    var stateId = parseInt(json["status"]);
+    if($(card).attr('data-id') == json["id"]) {
+      //ステータスの更新
+      var color = $(card).attr('data-color');
+      $(card).attr({
+        'data-id': json["id"],
+        'data-name': json["name"],
+        'data-statusText': statusJson[stateId]["name"],
+        'data-color': statusJson[stateId]["color"]
+      });
+      $(element).removeClass('bg-' + color);
+      $(element).addClass('bg-' + statusJson[stateId]["color"]);
+      $(element).find('.card-header').text(json["name"]);
+      $(element).find('.card-title').text(statusJson[stateId]["name"])
+      return false;
+    }
+  })
+}
 
 /**
  * カード押下時にステータス詳細モーダルを表示します
@@ -31,39 +80,8 @@ function showStatusDetail(obj) {
 function statusChange(obj) {
   var userId = $('#statusDetailModal').attr('data-id');
   var stateId = $(obj).attr('data-id');
-  pushStatus(userId, stateId);
   $('#statusDetailModal').modal('hide');
-  android.updateState(userId, stateId);
-}
-
-/**
- * ステータス等の情報を取得を要求します
- */
-function getStatus() {
-  $.ajax({
-    url:'https://script.google.com/macros/s/AKfycbwtEGgAOQ6LA3rcvsLcQFrrg8uVE1v5lkg8eNn40YjwAASTwmc/exec?returns=jsonp',
-    dataType: 'jsonp',
-    jsonpCallback: 'updateLayout',
-  });
-}
-
-/**
- * ステータス情報を更新します
- * @param {int} userId - ユーザ情報のID
- * @param {int} statusId - ステータス情報のID
- */
-function pushStatus(userId, statusId) {
-  var dataDict = {"id": userId, "status": statusId};
-  if(jqxhr) {
-    //通信を中断
-    jqxhr.abort();
-  }
-  jqxhr = $.ajax({
-    url: 'https://script.google.com/macros/s/AKfycbwtEGgAOQ6LA3rcvsLcQFrrg8uVE1v5lkg8eNn40YjwAASTwmc/exec?returns=jsonp&update=true',
-    dataType: 'jsonp',
-    data: dataDict,
-    jsonpCallback: 'updateLayout'
-  });
+  android.updateState(parseInt(userId), parseInt(stateId));
 }
 
 /**
@@ -72,7 +90,6 @@ function pushStatus(userId, statusId) {
  * @param {JSON} json - サーバからのレスポンスデータ
  */
 function updateLayout(json){
-  console.log(json);
   //ステータスの削除
   $("#memberStatus").empty();
 
@@ -84,12 +101,11 @@ function updateLayout(json){
     addCard(member[i].id, member[i].name, status[stateId].name, status[stateId].color);
   }
   initStatusDetailButton(status);
-  //setTimeout(function(){getStatus()}, UPDATE_TIME);
 }
 
 /**
  * Htmlにカードを追加します
- * @param {int} id - ユーザidea
+ * @param {int} id - ユーザid
  * @param {string} name - ユーザ名
  * @param {string} statusText - ステータス状態を表す文字列
  * @param {string} color - ステータス状態に対応するBootStrapカラー
