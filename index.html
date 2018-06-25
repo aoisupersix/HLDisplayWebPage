@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,11 +11,11 @@
   <!-- Bootstrap -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <style type="text/css">
-  .btn-fix {
-    padding: 0;
-    border: none;
-    white-space: normal;
-  }
+    .btn-fix {
+      padding: 0;
+      border: none;
+      white-space: normal;
+    }
   </style>
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -24,7 +25,22 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 </head>
+
 <body>
+  <!-- Firebase Database-->
+  <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyBSdNz4cIFipDnyow5bxvOi-M_ZyEVOya4",
+      authDomain: "hlmanager-32609.firebaseapp.com",
+      databaseURL: "https://hlmanager-32609.firebaseio.com",
+      projectId: "hlmanager-32609",
+      storageBucket: "hlmanager-32609.appspot.com",
+      messagingSenderId: "166777674806"
+    };
+    firebase.initializeApp(config);
+  </script>
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -38,24 +54,22 @@
   </div>
   <!-- ステータス表示部ここまで-->
   <!-- ステータス詳細モーダルここから-->
-  <div id="statusDetailModal" class="modal" tabindex="-1" role="dialog">
+  <div id="statusDetailModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">ステータス：<span id="statusDetail-Name" /></h5>
+          <h5 class="modal-title">ステータス：
+            <span id="statusDetail-Name" />
+          </h5>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
           <h4 id="statusDetail-Status" class="display-3">Status</h4>
-          <hr />
-          <h5>ステータス更新：</h5>
-          <div id="statusButtons">
-            <button type="button" class="btn bg-primary" style="width: 7em;height: 5em;">Primary</button>
-          </div>
         </div>
       </div>
     </div>
   </div>
   <!-- ステータス詳細モーダルここまで-->
 </body>
+
 </html>

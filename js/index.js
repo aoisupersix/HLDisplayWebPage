@@ -1,62 +1,74 @@
 /**
- * ステータス情報の更新間隔[ms]
- */
-var UPDATE_TIME = 2000
-
-/**
- * 連続通信の防止用
- */
-var jqxhr = null;
-
-/**
  * ステータス情報のJSON
  */
-var statusJson;
+var statusSnap;
+
+$(function(){
+  initDb();
+})
+
+/**
+ * HLDisplay_WebPage_Extra
+ * DBの取得設定を行います。
+ */
+function initDb() {
+  var db = firebase.database();
+  //初期データ取得
+  db.ref('/').once('value').then(function(snapshot) {
+    init(snapshot.val());
+  });
+
+  //メンバー情報更新
+  db.ref('members').on('value', function(snapshot) {
+    snapshot.forEach(function(member) {
+
+      updateMemberStatus(member.key, member.val());
+    });
+  });
+}
 
 /**
  * 初期化処理を行います。
  * AndroidApp側から呼び出される関数です。
- * @param {string} jsonString ステータス情報のJSON
+ * @param {DataSnapShot} rootSnap DBのルート
  */
-function init(jsonString) {
+function init(rootSnap) {
   //ステータスの削除
   $("#memberStatus").empty();
 
   //ステータスの生成
-  var json = JSON.parse(jsonString);
-  var members = json["members"];
-  var status = json["states"];
-  statusJson = status;
+  var members = rootSnap["members"];
+  var status = rootSnap["status"];
+  statusSnap = status;
   for(var i = 0; i < members.length; i++){
     var stateId = parseInt(members[i]["status"]);
-    addCard(i, members[i]["name"], status[stateId]["name"], status[stateId]["color"]);
+    addCard(i, members[i]["last_name"] + "　" + members[i]["first_name"], status[stateId]["name"], status[stateId]["color"]);
   }
-  initStatusDetailButton(status);
+  //initStatusDetailButton(status);
 }
 /**
  * メンバー情報の更新を行います。
  * AndroidApp側から呼び出される関数です。
- * @param {string} jsonString ステータス情報のJSON
+ * @param {Number} memberId メンバーのID
+ * @param {DataSnapShot} memberSnap メンバー情報
  */
-function updateMemberStatus(jsonString) {
-  var json = JSON.parse(jsonString);
+function updateMemberStatus(memberId, memberSnap) {
   $('#memberStatus').children().each(function(index, element) {
-    console.log("index-" + index);
     var card = $(element).find('.btn');
-    var stateId = parseInt(json["status"]);
-    if($(card).attr('data-id') == json["id"]) {
+    var stateId = parseInt(memberSnap["status"]);
+    if($(card).attr('data-id') == memberId) {
       //ステータスの更新
       var color = $(card).attr('data-color');
       $(card).attr({
-        'data-id': json["id"],
-        'data-name': json["name"],
-        'data-statusText': statusJson[stateId]["name"],
-        'data-color': statusJson[stateId]["color"]
+        'data-id': memberId,
+        'data-name': memberSnap["last_name"] + "　" + memberSnap["first_name"],
+        'data-statusText': statusSnap[stateId]["name"],
+        'data-color': statusSnap[stateId]["color"]
       });
       $(element).removeClass('bg-' + color);
-      $(element).addClass('bg-' + statusJson[stateId]["color"]);
-      $(element).find('.card-header').text(json["name"]);
-      $(element).find('.card-title').text(statusJson[stateId]["name"])
+      $(element).addClass('bg-' + statusSnap[stateId]["color"]);
+      $(element).find('.card-header').text(memberSnap["last_name"] + "　" + memberSnap["first_name"]);
+      $(element).find('.card-title').text(statusSnap[stateId]["name"])
       return false;
     }
   })
@@ -112,7 +124,7 @@ function updateLayout(json){
  */
 function addCard(id, name, statusText, color){
   $('#memberStatus').append(
-    $('<div class="card" style="margin: 5pt;width: 11rem;height: 9rem;"></div>').addClass('bg-' + color)
+    $('<div class="card" style="margin: 10pt;width: 15rem;height: 10rem;"></div>').addClass('bg-' + color)
     .append($('<a href="#" class="btn btn-fix"></a>')
       .attr({
         'onClick': 'showStatusDetail(this)',
