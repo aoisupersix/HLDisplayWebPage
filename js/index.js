@@ -65,10 +65,10 @@ function updateMemberStatus(memberId, memberSnap) {
         'data-statusText': statusSnap[stateId]["name"],
         'data-color': statusSnap[stateId]["color"]
       });
-      $(element).removeClass('bg-' + color);
-      $(element).addClass('bg-' + statusSnap[stateId]["color"]);
-      $(element).find('.card-header').text(memberSnap["last_name"] + "　" + memberSnap["first_name"]);
-      $(element).find('.card-title').text(statusSnap[stateId]["name"])
+      $(element).removeClass('table-' + color);
+      $(element).addClass('table-' + statusSnap[stateId]["color"]);
+      $(element).find('.name').text(memberSnap["last_name"] + "　" + memberSnap["first_name"]);
+      $(element).find('.status').text(statusSnap[stateId]["name"])
       return false;
     }
   })
@@ -137,8 +137,8 @@ function addMemberRow(id, name, statusText, color){
         })
       )
     )
-    .append($('<td></td>').text(name))
-    .append($('<td></td>').text(statusText))
+    .append($('<td class="name"></td>').text(name))
+    .append($('<td class="status"></td>').text(statusText))
   );
 }
 
