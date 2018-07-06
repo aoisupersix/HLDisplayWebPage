@@ -42,7 +42,7 @@ function init(rootSnap) {
   statusSnap = status;
   for(var i = 0; i < members.length; i++){
     var stateId = parseInt(members[i]["status"]);
-    addCard(i, members[i]["last_name"] + "　" + members[i]["first_name"], status[stateId]["name"], status[stateId]["color"]);
+    addMemberRow(i, members[i]["last_name"] + "　" + members[i]["first_name"], status[stateId]["name"], status[stateId]["color"]);
   }
   //initStatusDetailButton(status);
 }
@@ -79,6 +79,7 @@ function updateMemberStatus(memberId, memberSnap) {
  * @param {object} obj - クリックされたカード
  */
 function showStatusDetail(obj) {
+  console.log(obj);
   $('#statusDetail-Name').text($(obj).attr('data-name'));
   $('#statusDetail-Status').text($(obj).attr('data-statusText'));
   $('#statusDetailModal').attr('data-id', $(obj).attr('data-id'));
@@ -122,22 +123,22 @@ function updateLayout(json){
  * @param {string} statusText - ステータス状態を表す文字列
  * @param {string} color - ステータス状態に対応するBootStrapカラー
  */
-function addCard(id, name, statusText, color){
+function addMemberRow(id, name, statusText, color){
   $('#memberStatus').append(
-    $('<div class="card" style="margin: 10pt;width: 15rem;height: 10rem;"></div>').addClass('bg-' + color)
-    .append($('<a href="#" class="btn btn-fix"></a>')
-      .attr({
-        'onClick': 'showStatusDetail(this)',
-        'data-id': id,
-        'data-name': name,
-        'data-statusText': statusText,
-        'data-color': color
-      })
-      .append($('<h4 class="card-header"></h4>').text(name))
-      .append($('<div class="card-body"></div>')
-        .append($('<h1 class="card-title" style="font-weight: bold;"></h1>').text(statusText))
+    $('<tr></tr>').addClass('table-' + color)
+    .append($('<th></th>')
+      .append($('<a href="#" class="btn btn-fix">詳細</a>')
+        .attr({
+          'onClick': 'showStatusDetail(this)',
+          'data-id': id,
+          'data-name': name,
+          'data-statusText': statusText,
+          'data-color': color
+        })
       )
     )
+    .append($('<td></td>').text(name))
+    .append($('<td></td>').text(statusText))
   );
 }
 
