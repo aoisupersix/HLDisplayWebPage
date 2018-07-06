@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <title>HLDisplayWebPage</title>
+  <title>早川研究室 在室状況</title>
 
   <!-- Bootstrap -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -47,10 +47,29 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
   <script src="js/index.js"></script>
 
-  <h1 class="display-1" style="text-align: center;">Hayakawa Laboratory</h1>
+  <h1 class="display-3" style="margin: 10pt">早川研究室　在室状況</h1>
+  <p class="lead" style="margin-left: 2%">
+    拓殖大学工学部情報工学科早川研究室の現在の在室状況です。<br>更新はリアルタイムに行われます。ブラウザのリロードは不要です。
+  </p>
   <!-- ステータス表示部ここから-->
   <div class="container-fluid">
-    <div id="memberStatus" class="row center-block"></div>
+    <table class="table" id="memberStatus">
+      <thead>
+        <tr>
+          <th>詳細</th>
+          <th>名前</th>
+          <th>ステータス</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-success">
+          <th>詳細</th>
+          <td>田中 葵</td>
+          <td>在室</td>
+        </tr>
+      </tbody>
+    </table>
+    <div id="" class="row center-block"></div>
   </div>
   <!-- ステータス表示部ここまで-->
   <!-- ステータス詳細モーダルここから-->
