@@ -42,7 +42,13 @@ function init(rootSnap) {
   statusSnap = status;
   for(var i = 0; i < members.length; i++){
     var stateId = parseInt(members[i]["status"]);
-    addMemberRow(i, members[i]["last_name"] + "　" + members[i]["first_name"], status[stateId]["name"], status[stateId]["color"]);
+    addMemberRow(
+      i,
+      members[i]["last_name"] + "　" + members[i]["first_name"],
+      status[stateId]["name"],
+      status[stateId]["color"],
+      members[i]["last_update_date"]
+    );
   }
   //initStatusDetailButton(status);
 }
@@ -122,8 +128,9 @@ function updateLayout(json){
  * @param {string} name - ユーザ名
  * @param {string} statusText - ステータス状態を表す文字列
  * @param {string} color - ステータス状態に対応するBootStrapカラー
+ * @param {string} lastUpdateDate - 最終更新時間
  */
-function addMemberRow(id, name, statusText, color){
+function addMemberRow(id, name, statusText, color, lastUpdateDate){
   $('#memberStatus').append(
     $('<tr></tr>').addClass('table-' + color)
     .append($('<th></th>')
@@ -139,6 +146,7 @@ function addMemberRow(id, name, statusText, color){
     )
     .append($('<td class="name"></td>').text(name))
     .append($('<td class="status"></td>').text(statusText))
+    .append($('<td class="lastUpdateDate"></td>').text(lastUpdateDate))
   );
 }
 
